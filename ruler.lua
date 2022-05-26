@@ -1,14 +1,7 @@
 local rulerStartHotkey = {
     type = "custom-input",
     name = "ruler-start",
-    key_sequence = "SHIFT + S",
-    consuming = "none"
-}
-
-local rulerEndHotkey = {
-    type = "custom-input",
-    name = "ruler-end",
-    key_sequence = "SHIFT + A",
+    key_sequence = "SHIFT + C",
     consuming = "none"
 }
 

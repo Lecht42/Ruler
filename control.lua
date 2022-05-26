@@ -1,4 +1,6 @@
 script.on_event("ruler-start", function(event)
-    game.print("Ran on tick: " .. tostring(event.tick))
-    rendering.draw_line{surface = 1, from = {0, 0}, to = {100, 100}, color = {1, 1, 1}, width = 2}
+    local player = game.get_player(event.player_index)
+    local cursor = event.cursor_position
+    game.print(player.color)
+    rendering.draw_line({surface = player.character.surface, from = {cursor.x, cursor.y}, to = {100, 100}, color = player.color, width = 2})
 end)
