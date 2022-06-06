@@ -1,31 +1,27 @@
-local invisible = {r=0, g=0, b=0, a=0}
+local pointA_sprite = {
+    filename = "__ruler__/graphics/point.png",
+    name = "point-sprite",
+    type = "sprite",
+    priority = "extra-high",
+    width = 64,
+    height = 64,
+    size = 32,
+    shift = {0, 0}
+}
 
-local rulerHotkey = {
+local pointA_hotkey = {
     type = "custom-input",
-    name = "ruler-hotkey",
+    name = "ruler-set-pointA",
     key_sequence = "SHIFT + C",
     consuming = "none"
 }
 
-local mouseMemorizer = {
+local pointB_hotkey = {
     type = "custom-input",
-    name = "mouse-memorizer",
+    name = "ruler-set-pointB",
     key_sequence = "mouse-button-1",
     consuming = "none"
 }
 
-local ruler = {
-    type = "selection-tool",
-    name = "ruler-selection",
-    stack_size = 1,
-    icon = "__base__/graphics/icons/fluid/barreling/barrel-empty.png",
-    icon_size = 32,
-    selection_color = invisible,
-    alt_selection_color = invisible,
-    selection_mode = "nothing",
-    alt_selection_mode = "any-tile",
-    selection_cursor_box_type = "pair",
-    alt_selection_cursor_box_type = "pair",
-}
 
-data:extend{ruler, rulerHotkey, mouseMemorizer}
+data:extend{pointA_sprite, pointA_hotkey, pointB_hotkey}
