@@ -1,3 +1,22 @@
+Dirs = {
+    RIGHT_TOP = 0,
+    RIGHT_BOTTOM = 1,
+    LEFT_BOTTOM = 2,
+    LEFT_TOP = 3
+}
+
+function getDirectionFromPoints( point_A, point_B )
+    if point_A.x < point_B.x and point_A.y > point_B.y then
+        return Dirs.RIGHT_TOP
+    elseif point_A.x < point_B.x and point_A.y < point_B.y then
+        return Dirs.RIGHT_BOTTOM
+    elseif point_A.x < point_B.x and point_A.y > point_B.y then
+        return Dirs.LEFT_BOTTOM
+    end
+
+    return Dirs.LEFT_TOP
+end
+
 require("dirs")
 
 
@@ -23,6 +42,17 @@ function InfoBox:new (position, direction, player)
     end
 
     function obj:draw()
+        if point_A.x < point_B.x and point_A.y > point_B.y then
+            return Dirs.RIGHT_TOP
+        elseif point_A.x < point_B.x and point_A.y < point_B.y then
+            return Dirs.RIGHT_BOTTOM
+        elseif point_A.x < point_B.x and point_A.y > point_B.y then
+            return Dirs.LEFT_BOTTOM
+        else
+            
+        end
+
+
         rendering.draw_rectangle{ color={a = 0.8}, filled=true, left_top=obj.left_top, right_bottom=obj.right_bottom, surface=surface }
         obj:drawCoordinates()
     end

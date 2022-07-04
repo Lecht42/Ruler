@@ -1,4 +1,6 @@
 require("info_box")
+require("dirs")
+
 
 Line = {}
 
@@ -17,7 +19,7 @@ function Line:new (point_A, point_B, player)
         return x + y + 1
     end
     
-    function obj:getTrueLength()
+    function obj:getLineLength()
         local a = obj.point_B.x - obj.point_A.x
         local b = obj.point_B.y - obj.point_A.y
     
@@ -32,20 +34,7 @@ function Line:new (point_A, point_B, player)
     end
 
     function obj:drawLabelBox()
-        local width = 5
-        local height = 4
-        local middle = obj:getMiddle()
-        local left_top = { x = middle.x - width, y = middle.y - height}
-        local right_bottom = middle
-
-        game.print(obj.point_A.y)
-        if obj.point_A.x < obj.point_B.x and obj.point_A.y < obj.point_B.y then
-            left_top.y = left_top.y + (height * 2)
-        elseif obj.point_A.x > obj.point_B.x and obj.point_A.y > obj.point_B.y then
-            left_top.y = left_top.y + (height * 2)
-        end
-        
-        InfoBox:new(left_top, right_bottom,  player)
+        InfoBox:new(obj:getMiddle(), getDirectionFromPoints(obj.point_A, obj.point_B),  player) //TODO
     end
 
     rendering.draw_line({surface = surface, from = obj.point_A, to = obj.point_B, color = player.color, width = 3})

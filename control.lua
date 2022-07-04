@@ -35,7 +35,6 @@ script.on_event("ruler-set-pointB", function(event)
     local player = getPlayerFromEvent(event)
     local cursor_position = getCellCenter(event.cursor_position)
 
-
     local line = Line:new(first_point, cursor_position, player)
     drawPoint(cursor_position, player)
     
