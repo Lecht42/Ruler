@@ -37,7 +37,6 @@ script.on_event("ruler-set-pointB", function(event)
 
 
     local line = Line:new(first_point, cursor_position, player)
-    line:render()
     drawPoint(cursor_position, player)
     
     first_point = nil
