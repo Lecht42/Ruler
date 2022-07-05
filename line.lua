@@ -1,14 +1,14 @@
 require("info_box")
-require("dirs")
+require("direction")
+require("utils")
 
 
 Line = {}
 
-function Line:new (point_A, point_B, player)
-    local emptyPoint = {x = 0, y = 0}
+function Line:new (context, point_A, point_B)
     local obj = {
-        point_A = point_A or emptyPoint,
-        point_B = point_B or emptyPoint
+        point_A = point_A or EmptyPoint,
+        point_B = point_B or EmptyPoint
     }
     local surface = player.character.surface
 
@@ -34,7 +34,7 @@ function Line:new (point_A, point_B, player)
     end
 
     function obj:drawLabelBox()
-        InfoBox:new(obj:getMiddle(), getDirectionFromPoints(obj.point_A, obj.point_B),  player) //TODO
+        InfoBox:new(obj:getMiddle(), RelativeDirection:new(obj.point_A, obj.point_B))
     end
 
     rendering.draw_line({surface = surface, from = obj.point_A, to = obj.point_B, color = player.color, width = 3})

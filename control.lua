@@ -30,12 +30,12 @@ script.on_event("ruler-set-pointA", function(event)
 end)
 
 script.on_event("ruler-set-pointB", function(event)
-    if (first_point == nil) then return end
+    if first_point == nil then return end
     
     local player = getPlayerFromEvent(event)
     local cursor_position = getCellCenter(event.cursor_position)
 
-    local line = Line:new(first_point, cursor_position, player)
+    local line = Line:new(player.surface, first_point, cursor_position, player)
     drawPoint(cursor_position, player)
     
     first_point = nil
