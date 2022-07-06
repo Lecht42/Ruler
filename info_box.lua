@@ -2,13 +2,13 @@ require("direction")
 require("utils")
 
 InfoBoxStandartSize = {
-    height = 2,
-    width = 3
+    height = 1.9,
+    width = 4
 }
 
 InfoBox = {}
 
-function InfoBox:new (surface, position, direction)
+function InfoBox:new (context, position, direction)
     local obj = {
         corner_A = position or EmptyPoint,
         corner_B = position or EmptyPoint,
@@ -33,8 +33,49 @@ function InfoBox:new (surface, position, direction)
     end
 
     function obj:drawBody()
-        rendering.draw_rectangle{ color={a = 0.8}, filled=true, left_top=obj.corner_A, right_bottom=obj.corner_B, surface=surface }
-        rendering.draw_text{color={  r = 0, g = 0, b = 1, a = 1 }, text={ "x" }, target=obj.text_pos, surface=surface }
+        local margin_X = 0.2
+        local margin_Y = 0.1
+        local offset_X = 0.8
+        local offset_Y = 0.5
+
+        local surface = context.player.surface
+
+
+        rendering.draw_rectangle{ color={}, filled=true, left_top=obj.corner_A, right_bottom=obj.corner_B, surface=surface }
+
+        function drawNamesColumn() 
+            local position = {x = obj.text_pos.x + margin_X, y = obj.text_pos.y + margin_Y}
+
+            rendering.draw_text{color=Colors.BLUE, text={ "", "  x" }, target=position, surface=surface }
+            position.y = position.y + offset_Y
+            rendering.draw_text{color=Colors.RED, text={ "", "  y" }, target=position, surface=surface }
+            position.y = position.y + offset_Y
+            rendering.draw_text{color=Colors.ORANGE, text={ "", "x×y" }, target=position, surface=surface }
+        end
+
+        function drawValuesColumn() 
+            local position = {x = obj.text_pos.x + margin_X + offset_X, y = obj.text_pos.y + margin_Y}
+
+            local x = context.line:getX()
+            local y = context.line:getY()
+
+            rendering.draw_text{color=Colors.BLUE, text={ "", x }, target=position, surface=surface }
+            position.y = position.y + offset_Y
+            rendering.draw_text{color=Colors.RED, text={ "", y }, target=position, surface=surface }
+            position.y = position.y + offset_Y
+            rendering.draw_text{color=Colors.ORANGE, text={ "", x * y  }, target=position, surface=surface }
+        end
+
+        function drawLengths() 
+            local position = {x = obj.text_pos.x + margin_X + (offset_X * 2), y = obj.text_pos.y + margin_Y}
+
+            rendering.draw_text{color={  r = 0, g = 0, b = 1, a = 1 }, text={ "", "  x" }, target=position, surface=surface }
+            position.y = position.y + offset_Y
+            rendering.draw_text{color={  r = 1, g = 0, b = 0, a = 1 }, text={ "", "  y" }, target=position, surface=surface }
+        end
+
+        drawNamesColumn()
+        drawValuesColumn()
     end
 
     function obj:draw()

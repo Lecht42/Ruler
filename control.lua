@@ -1,5 +1,5 @@
 require("line")
-
+require("utils")
 
 first_point = nil
 
@@ -8,7 +8,9 @@ function drawPoint (target, player)
 end
 
 function getCellCenter (position)
-    return {x = math.floor(position.x) + 0.5, y = math.floor(position.y) + 0.5}
+    local half = 0.5
+
+    return {x = math.floor(position.x) + half, y = math.floor(position.y) + half}
 end
 
 function getPlayerFromEvent(event)
@@ -35,7 +37,8 @@ script.on_event("ruler-set-pointB", function(event)
     local player = getPlayerFromEvent(event)
     local cursor_position = getCellCenter(event.cursor_position)
 
-    local line = Line:new(player.surface, first_point, cursor_position, player)
+    local context = { event = event, player = player }
+    local line = Line:new(context, first_point, cursor_position, player)
     drawPoint(cursor_position, player)
     
     first_point = nil

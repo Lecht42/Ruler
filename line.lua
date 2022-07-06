@@ -10,15 +10,19 @@ function Line:new (context, point_A, point_B)
         point_A = point_A or EmptyPoint,
         point_B = point_B or EmptyPoint
     }
-    local surface = player.character.surface
+
+    function obj:getX()
+        return math.abs(obj.point_B.x  - obj.point_A.x) + 1
+    end
+
+    function obj:getY()
+        return math.abs(obj.point_B.y  - obj.point_A.y) + 1
+    end
 
     function obj:getTiledLength()
-        local x = math.abs(obj.point_B.x - obj.point_A.x) 
-        local y = math.abs(obj.point_B.y - obj.point_A.y) 
-
-        return x + y + 1
+        return obj:getX() + obj:getY()
     end
-    
+
     function obj:getLineLength()
         local a = obj.point_B.x - obj.point_A.x
         local b = obj.point_B.y - obj.point_A.y
@@ -33,12 +37,14 @@ function Line:new (context, point_A, point_B)
         return {x = a / 2, y = b / 2}
     end
 
-    function obj:drawLabelBox()
-        InfoBox:new(obj:getMiddle(), RelativeDirection:new(obj.point_A, obj.point_B))
+    function obj:drawInfoBox()
+        context.line = obj
+
+        InfoBox:new(context, obj:getMiddle(), RelativeDirection:new(obj.point_A, obj.point_B))
     end
 
-    rendering.draw_line({surface = surface, from = obj.point_A, to = obj.point_B, color = player.color, width = 3})
-    obj:drawLabelBox();
+    rendering.draw_line({surface = context.player.surface, from = obj.point_A, to = obj.point_B, color = context.player.color, width = 3})
+    obj:drawInfoBox();
 
     setmetatable(obj, self)
     self.__index = self

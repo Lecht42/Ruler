@@ -1,5 +1,11 @@
 EmptyPoint = {x = 0, y = 0}
 
+Colors = {
+    BLUE = {  r = 0, g = 0, b = 1, a = 1 },
+    RED = {  r = 1, g = 0, b = 0, a = 1 },
+    ORANGE = {  r = 1, g = 0.6, b = 0, a = 1 }
+}
+
 function math.flip(x)
     if x < 0 then 
         return math.abs(x) 
