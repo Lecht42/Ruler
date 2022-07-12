@@ -1,5 +1,5 @@
 require("direction")
-require("utils")
+require("info")
 
 InfoBoxStandartSize = {
     height = 1.9,
@@ -14,8 +14,10 @@ function InfoBox:new (context, position, direction)
         corner_B = position or EmptyPoint,
         text_pos = position or EmptyPoint,
         direction = direction or Dirs.RIGHT_BOTTOM,
-        size = copy(InfoBoxStandartSize)
+        size = copy(InfoBoxStandartSize),
+        info = Info:new(context.line)
     }
+    
 
     function obj:calculateOrientation()
         local size = obj.size
@@ -33,6 +35,9 @@ function InfoBox:new (context, position, direction)
     end
 
     function obj:drawBody()
+        
+        local info = obj.info
+        
         local margin_X = 0.2
         local margin_Y = 0.1
         local offset_X = 0.8
@@ -56,26 +61,25 @@ function InfoBox:new (context, position, direction)
         function drawValuesColumn() 
             local position = {x = obj.text_pos.x + margin_X + offset_X, y = obj.text_pos.y + margin_Y}
 
-            local x = context.line:getX()
-            local y = context.line:getY()
-
-            rendering.draw_text{color=Colors.BLUE, text={ "", x }, target=position, surface=surface }
+            rendering.draw_text{color=Colors.BLUE, text={ "", info.x }, target=position, surface=surface }
             position.y = position.y + offset_Y
-            rendering.draw_text{color=Colors.RED, text={ "", y }, target=position, surface=surface }
+            rendering.draw_text{color=Colors.RED, text={ "", info.y }, target=position, surface=surface }
             position.y = position.y + offset_Y
-            rendering.draw_text{color=Colors.ORANGE, text={ "", x * y  }, target=position, surface=surface }
+            rendering.draw_text{color=Colors.ORANGE, text={ "", info.area  }, target=position, surface=surface }
         end
 
         function drawLengths() 
-            local position = {x = obj.text_pos.x + margin_X + (offset_X * 2), y = obj.text_pos.y + margin_Y}
+            local position = {x = obj.text_pos.x + margin_X + (offset_X * 2), y = obj.text_pos.y + (margin_Y * 3)}
+            local scale = 2.0
 
-            rendering.draw_text{color={  r = 0, g = 0, b = 1, a = 1 }, text={ "", "  x" }, target=position, surface=surface }
-            position.y = position.y + offset_Y
-            rendering.draw_text{color={  r = 1, g = 0, b = 0, a = 1 }, text={ "", "  y" }, target=position, surface=surface }
+            rendering.draw_text{color=Colors.WHITE, scale = scale, text={ "", "⁄" }, target=position, surface=surface }
+            position.x = position.x + (offset_X / 2)
+            rendering.draw_text{color=Colors.WHITE, scale = scale, text={ "", info.lineLength }, target=position, surface=surface }
         end
 
         drawNamesColumn()
         drawValuesColumn()
+        drawLengths()
     end
 
     function obj:draw()

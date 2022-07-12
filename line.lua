@@ -11,23 +11,23 @@ function Line:new (context, point_A, point_B)
         point_B = point_B or EmptyPoint
     }
 
-    function obj:getX()
-        return math.abs(obj.point_B.x  - obj.point_A.x) + 1
+    function obj:getLengthX()
+        return math.abs(obj.point_B.x - obj.point_A.x)
     end
 
-    function obj:getY()
-        return math.abs(obj.point_B.y  - obj.point_A.y) + 1
+    function obj:getLengthY()
+        return math.abs(obj.point_B.y - obj.point_A.y)
     end
 
-    function obj:getTiledLength()
-        return obj:getX() + obj:getY()
-    end
-
-    function obj:getLineLength()
+    function obj:getLength()
         local a = obj.point_B.x - obj.point_A.x
         local b = obj.point_B.y - obj.point_A.y
     
         return math.sqrt(math.pow(a, 2) + math.pow(b, 2))
+    end
+
+    function obj:getArea()
+        return obj:getLengthX() * obj:getLengthY()
     end
 
     function obj:getMiddle()
