@@ -3,8 +3,8 @@ require("utils")
 require("info")
 
 InfoBoxStandartSize = {
-    height = 2.0,
-    width = 7.0,
+    height = 1.0,
+    width = 4.0,
 }
 
 InfoBox = {}
@@ -15,21 +15,31 @@ function InfoBox:new (context, position, direction)
         corner_B = position or EmptyPoint,
         text_pos = position or EmptyPoint,
         direction = direction or Dirs.RIGHT_BOTTOM,
-        size = copy(InfoBoxStandartSize),
-        info = Info:new(context.line)
+        info = Info:new(context.line),
+        size = InfoBoxStandartSize,
+        sizeMultiplier = 1.0,
     }
     
+    obj.sizeMultiplier = math.max( obj.sizeMultiplier, obj.info.lineLength / 16.0 ) 
 
-    function obj:calculateOrientation()
+    local size = copy(InfoBoxStandartSize)
+    for i,e in ipairs(size) do
+        e = e * obj.sizeMultiplier
+    end 
+    obj.size = size
+
+    function obj:calculateGeometry()
         local size = obj.size
+        local multiplier = obj.sizeMultiplier
+
         function setCorner_B()
-            obj.corner_B = { x = obj.corner_A.x + size.width, y = obj.corner_A.y + size.height }
+            obj.corner_B = { x = obj.corner_A.x + (size.width * multiplier), y = obj.corner_A.y + (size.height * multiplier) }
         end
 
         if obj.direction == Dirs.LEFT_TOP or obj.direction == Dirs.RIGHT_BOTTOM then
             size.width = math.flip(size.width)
             setCorner_B()
-            obj.text_pos = { x = obj.corner_B.x, y = obj.corner_B.y - size.height  }
+            obj.text_pos = { x = obj.corner_B.x, y = obj.corner_B.y - (size.height * multiplier)  }
         else
             setCorner_B()
         end
@@ -38,57 +48,76 @@ function InfoBox:new (context, position, direction)
     function obj:drawBody()
         
         local info = obj.info
+        local multiplier = obj.sizeMultiplier
         
-        local padding_X = 0.2
-        local padding_Y = 0.1
-        local offset_X = 1.0
-        local offset_Y = 0.5
+        local padding_X = 0.1 * multiplier
+        local padding_Y = 0.05 * multiplier
+        local offset_X = 0.5 * multiplier
+        local offset_Y = 0.25 * multiplier
 
         local surface = context.player.surface
-        local write = rendering.draw_text
 
-        rendering.draw_rectangle{ color=Colors.BLACK, filled=true, left_top=obj.corner_A, right_bottom=obj.corner_B, surface=surface }
+        rendering.draw_rectangle{ color=Colors.BLACK, filled=true, left_top=obj.corner_A, right_bottom=obj.corner_B, surface = surface }
 
-        function drawNamesColumn() 
-            local position = {x = obj.text_pos.x + padding_X, y = obj.text_pos.y + padding_Y}
+        local position = {x = obj.text_pos.x + padding_X, y = obj.text_pos.y + padding_Y}
+        local starting_position = copy(position)
+        local scale = 0.5 * multiplier
 
-            write{color=Colors.RED, text={ "", "  x" }, target=position, surface=surface }
-            position.y = position.y + offset_Y
-            write{color=Colors.GREEN, text={ "", "  y" }, target=position, surface=surface }
-            position.y = position.y + offset_Y
-            write{color=Colors.BLUE, text={ "", "x×y" }, target=position, surface=surface }
+        function nextColumn(quantity)
+            position.y = starting_position.y
+
+            quantity = quantity or 1
+            for  i=1,quantity do
+                position.x = position.x + offset_X
+            end
         end
 
-        function drawValuesColumn() 
-            local position = {x = obj.text_pos.x + padding_X + offset_X, y = obj.text_pos.y + padding_Y}
-
-            write{color=Colors.RED, text={ "", info.x }, target=position, surface=surface }
+        
+        function nextRow()
             position.y = position.y + offset_Y
-            write{color=Colors.GREEN, text={ "", info.y }, target=position, surface=surface }
-            position.y = position.y + offset_Y
-            write{color=Colors.BLUE, text={ "", info.area  }, target=position, surface=surface }
         end
 
-        function drawLengths() 
-            local position = {x = obj.text_pos.x + padding_X + (offset_X * 2), y = obj.text_pos.y + (padding_Y * 3)}
-            local scale = 2.0
-
-            write{color=Colors.YELLOW, scale = scale, text={ "", "◢" }, target=position, surface=surface }
-            position.x = position.x + offset_X 
-            write{color=Colors.YELLOW, scale = scale, text={ "", info.lineLength }, target=position, surface=surface }
-            position.x = position.x + (offset_X * 1.5) 
-            write{color=Colors.ORANGE, scale = scale, text={ "", "▟" }, target=position, surface=surface }
-            position.x = position.x + offset_X 
-            write{color=Colors.ORANGE, scale = scale, text={ "", info.tiledLineLength }, target=position, surface=surface }
+        function center()
+            position.y = position.y + (offset_Y / 2)
         end
 
-        drawNamesColumn()
-        drawValuesColumn()
-        drawLengths()
+        function write(color, text)
+            rendering.draw_text{ color=color, text=text, scale = scale, target = position, surface = surface }
+        end
+
+        write(Colors.RED, { "", "  x" })
+        nextRow()
+        write(Colors.GREEN, { "", "  y" })
+        nextRow()
+        write(Colors.BLUE, { "", "x×y" })
+
+        nextColumn()
+
+        write(Colors.RED, { "", info.x })
+        nextRow()
+        write(Colors.GREEN, { "", info.y })
+        nextRow()
+        write(Colors.BLUE, { "", info.area  })
+
+        scale = 1.0 * multiplier
+
+        nextColumn()
+        center()
+        
+        write(Colors.YELLOW, { "", "◢" })
+        position.x = position.x + offset_X
+        write(Colors.YELLOW, { "", info.lineLength })
+        
+        nextColumn(2)
+        center()
+        
+        write(Colors.ORANGE, { "", "▟" } )
+        position.x = position.x + offset_X
+        write(Colors.ORANGE, { "", info.tiledLineLength })
     end
 
     function obj:draw()
-        obj:calculateOrientation()
+        obj:calculateGeometry()
         obj:drawBody()
     end
 

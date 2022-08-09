@@ -4,12 +4,14 @@ require("utils")
 Info = {}
 
 function Info:new (line)
+    
     local obj = {
        x = 0,
        y = 0,
        area = 0,
        lineLength = 0,
        tiledLineLength = 0,
+       boxScale = 0,
     }
 
     function obj:calculate()
