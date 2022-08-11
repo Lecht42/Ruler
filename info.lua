@@ -4,7 +4,6 @@ require("utils")
 Info = {}
 
 function Info:new (line)
-    
     local obj = {
        x = 0,
        y = 0,

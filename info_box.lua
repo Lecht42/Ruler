@@ -48,7 +48,8 @@ function InfoBox:new (context, position, direction)
     function obj:drawBody()
         local info = obj.info
         local multiplier = obj.sizeMultiplier
-        
+        local rendering_ids = {}
+
         local padding_X = 0.1 * multiplier
         local padding_Y = 0.05 * multiplier
         local offset_X = 0.5 * multiplier
@@ -56,7 +57,7 @@ function InfoBox:new (context, position, direction)
 
         local surface = context.player.surface
 
-        rendering.draw_rectangle{ color=Colors.TRANSPARENT_BLACK, filled=true, left_top=obj.corner_A, right_bottom=obj.corner_B, surface = surface }
+        table.insert(rendering_ids, rendering.draw_rectangle{ color=Colors.TRANSPARENT_BLACK, filled=true, left_top=obj.corner_A, right_bottom=obj.corner_B, surface = surface })
 
         local position = {x = obj.text_pos.x + padding_X, y = obj.text_pos.y + padding_Y}
         local starting_position = copy(position)
@@ -73,7 +74,6 @@ function InfoBox:new (context, position, direction)
                 position.x = position.x + offset_X
             end
         end
-
         
         function nextRow()
             position.y = position.y + offset_Y
@@ -84,7 +84,7 @@ function InfoBox:new (context, position, direction)
         end
 
         function write(color, text)
-            rendering.draw_text{ color=color, text=text, scale = scale, target = position, surface = surface }
+            table.insert(rendering_ids, rendering.draw_text{ color=color, text=text, scale = scale, target = position, surface = surface }) 
         end
 
         write(Colors.RED, { "", "  x" })
@@ -116,6 +116,9 @@ function InfoBox:new (context, position, direction)
         write(Colors.ORANGE, { "", "▟" } )
         position.x = position.x + offset_X
         write(Colors.ORANGE, { "", info.tiledLineLength })
+
+        local time_to_exist = settings.get_player_settings(context.event.player_index)["time-to-exist"].value
+        setDestroyTimers(rendering_ids, time_to_exist)
     end
 
     function obj:draw()
