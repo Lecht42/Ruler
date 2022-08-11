@@ -14,7 +14,7 @@ local pointA_hotkey = {
     name = "ruler-set-pointA",
     localised_name = {"controls.start-measuring"},
     key_sequence = "SHIFT + C",
-    consuming = "none",
+    consuming = "none"
 }
 
 local pointB_hotkey = {
@@ -23,8 +23,7 @@ local pointB_hotkey = {
     localised_name = {"controls.end-measuring"},
     key_sequence = "mouse-button-1",
     consuming = "none",
-    linked_game_control = "build",
+    linked_game_control = "build"
 }
-
 
 data:extend{point_sprite, pointA_hotkey, pointB_hotkey}

@@ -1,4 +1,5 @@
 Dirs = {
+    NONE = -1,
     RIGHT_TOP = 0,
     RIGHT_BOTTOM = 1,
     LEFT_BOTTOM = 2,
@@ -7,9 +8,9 @@ Dirs = {
 
 RelativeDirection = {}
 
-function RelativeDirection:new (point_A, point_B)
+function RelativeDirection:new(point_A, point_B)
     local obj = {
-        direction = emptyPoint
+        direction = Dirs.NONE
     }
 
     if point_A.x < point_B.x and point_A.y > point_B.y then
