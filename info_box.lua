@@ -3,7 +3,7 @@ require("utils")
 require("info")
 
 InfoBoxStandartSize = {
-    height = 1.0,
+    height = 0.9,
     width = 4.0,
 }
 
@@ -46,7 +46,6 @@ function InfoBox:new (context, position, direction)
     end
 
     function obj:drawBody()
-        
         local info = obj.info
         local multiplier = obj.sizeMultiplier
         
@@ -57,11 +56,14 @@ function InfoBox:new (context, position, direction)
 
         local surface = context.player.surface
 
-        rendering.draw_rectangle{ color=Colors.BLACK, filled=true, left_top=obj.corner_A, right_bottom=obj.corner_B, surface = surface }
+        rendering.draw_rectangle{ color=Colors.TRANSPARENT_BLACK, filled=true, left_top=obj.corner_A, right_bottom=obj.corner_B, surface = surface }
 
         local position = {x = obj.text_pos.x + padding_X, y = obj.text_pos.y + padding_Y}
         local starting_position = copy(position)
-        local scale = 0.5 * multiplier
+        
+        local baseScale = 0.45
+        
+        local scale = baseScale * multiplier
 
         function nextColumn(quantity)
             position.y = starting_position.y
@@ -99,7 +101,7 @@ function InfoBox:new (context, position, direction)
         nextRow()
         write(Colors.BLUE, { "", info.area  })
 
-        scale = 1.0 * multiplier
+        scale = (baseScale * 2.0) * multiplier
 
         nextColumn()
         center()

@@ -9,6 +9,7 @@ Colors = {
     WHITE = { r = 1, g = 1, b = 1, a = 1 },
     BLUE = { r = 0, g = 0, b = 1, a = 1 },
     BLACK = { r = 0, g = 0, b = 0, a = 1 },
+    TRANSPARENT_BLACK = { r = 0, g = 0, b = 0, a = 0.8 },
 }
 
 function math.flip(x)
@@ -33,8 +34,15 @@ function copy(orig)
         for orig_key, orig_value in pairs(orig) do
             copy[orig_key] = orig_value
         end
-    else -- number, string, boolean, etc
+    else
         copy = orig
     end
+
     return copy
+end
+
+function setDestroyTimers(items)
+    for i,e in ipairs(items) do
+        rendering.set_time_to_live(e, 5)
+    end 
 end

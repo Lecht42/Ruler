@@ -8,7 +8,8 @@ Line = {}
 function Line:new (context, point_A, point_B)
     local obj = {
         point_A = point_A or EmptyPoint,
-        point_B = point_B or EmptyPoint
+        point_B = point_B or EmptyPoint,
+        id = -1,
     }
 
     function obj:getLengthX()
@@ -43,8 +44,12 @@ function Line:new (context, point_A, point_B)
         InfoBox:new(context, obj:getMiddle(), RelativeDirection:new(obj.point_A, obj.point_B))
     end
 
-    rendering.draw_line({surface = context.player.surface, from = obj.point_A, to = obj.point_B, color = context.player.color, width = 3})
-    obj:drawInfoBox();
+    function obj:draw()
+        obj.id = rendering.draw_line({surface = context.player.surface, from = obj.point_A, to = obj.point_B, color = context.player.color, width = 3})
+        obj:drawInfoBox()
+    end
+
+    obj:draw()
 
     setmetatable(obj, self)
     self.__index = self

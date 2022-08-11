@@ -4,7 +4,7 @@ require("utils")
 first_point = nil
 
 function drawPoint (target, player) 
-    rendering.draw_sprite({surface = player.surface, sprite = "point-sprite", target = target, target_offset = {0, 0}, tint = player.color})
+    return rendering.draw_sprite({surface = player.surface, sprite = "point-sprite", target = target, target_offset = {0, 0}, tint = player.color})
 end
 
 function getCellCenter (position)
@@ -24,8 +24,8 @@ script.on_event("ruler-set-pointA", function(event)
         local player = getPlayerFromEvent(event)
         local cursor_position = getCellCenter(event.cursor_position)
 
-        drawPoint(cursor_position, player) 
         first_point = cursor_position
+        first_point.id = drawPoint(cursor_position, player) 
     else 
         first_point = nil
     end
@@ -39,7 +39,8 @@ script.on_event("ruler-set-pointB", function(event)
 
     local context = { event = event, player = player }
     local line = Line:new(context, first_point, cursor_position, player)
-    drawPoint(cursor_position, player)
     
+    setDestroyTimers({first_point.id, line.id, drawPoint(cursor_position, player)})
+
     first_point = nil
 end)

@@ -20,7 +20,7 @@ function Info:new (line)
         obj.area = obj.x * obj.y
         obj.lineLength = line:getLength()
         obj.lineLength = math.floor(obj.lineLength) + math.floorPrecision(obj.lineLength, 0.1)
-        obj.tiledLineLength = obj.x + obj.y
+        obj.tiledLineLength = obj.x + obj.y - 1
     end
 
     obj:calculate()
