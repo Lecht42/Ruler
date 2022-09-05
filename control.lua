@@ -1,7 +1,12 @@
 require("line")
 require("utils")
+require("artist")
 
 first_point = nil
+
+script.on_event("on_player_joined_game", function(event)
+    addArtist(event.player.name)
+end)
 
 script.on_event("ruler-set-pointA", function(event)
     rendering.clear()
